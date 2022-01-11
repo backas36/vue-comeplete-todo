@@ -27,15 +27,25 @@
       </thead>
       <tbody>
         <tr v-for="(todo, index) in todos" :key="index">
-          <td>{{ todo.content }}</td>
-          <td>{{ todo.status }}</td>
+          <td :class="{ finished: todo.status === 2 }">
+            {{ todo.content }}
+          </td>
+          <td class="fixed-width">
+            <span
+              class="pointer"
+              @click="toggleStatus(index, todo.status)"
+              :class="{ 'text-danger': todo.status === 0 }"
+            >
+              {{ avaliableStatuses[todo.status] }}
+            </span>
+          </td>
           <td>
-            <div class="text-center">
+            <div class="text-center" @click="editTodo(index)">
               <span class="fa fa-pen"></span>
             </div>
           </td>
           <td>
-            <div class="text-center">
+            <div class="text-center" @click="deletTodo(index)">
               <span class="fa fa-trash"></span>
             </div>
           </td>
@@ -47,42 +57,55 @@
 
 <script>
 export default {
-  name: "HelloWorld",
-  props: {
-    msg: String,
-  },
   data() {
     return {
       todo: "",
-      todos: [
-        {
-          content: "Steal bananas",
-          status: "to-do",
-        },
-        {
-          content: "Steal bananas2",
-          status: "in-progress",
-        },
-        {
-          content: "Steal bananas3",
-          status: "to-do",
-        },
-      ],
+      editedTodoIndex: null,
+      avaliableStatuses: ["to-do", "in-progress", "finished"],
+      todos: [],
     };
   },
   methods: {
     submitTodo() {
-      console.log(this.todo);
       if (this.todo.length === 0) return;
-      this.todos.push({
-        content: this.todo,
-        status: "to-do",
-      });
+      if (!this.editedTodoIndex) {
+        this.todos.push({
+          content: this.todo,
+          status: 0,
+        });
+      } else {
+        this.todos[this.editedTodoIndex].content = this.todo;
+        this.editedTodoIndex = null;
+      }
       this.todo = "";
+    },
+    deletTodo(index) {
+      this.todos.splice(index, 1);
+    },
+    toggleStatus(todoIndex, todoStatusIndex) {
+      if (todoStatusIndex === this.avaliableStatuses.length - 1) {
+        this.todos[todoIndex].status = 0;
+      } else {
+        this.todos[todoIndex].status = todoStatusIndex + 1;
+      }
+    },
+    editTodo(index) {
+      this.todo = this.todos[index].content;
+      this.editedTodoIndex = index;
     },
   },
 };
 </script>
 
 <style scoped>
+.pointer {
+  cursor: pointer;
+  color: green;
+}
+.fixed-width {
+  width: 120px;
+}
+.finished {
+  text-decoration: line-through;
+}
 </style>
