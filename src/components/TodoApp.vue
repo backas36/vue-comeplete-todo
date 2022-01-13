@@ -45,7 +45,7 @@
             </div>
           </td>
           <td>
-            <div class="text-center" @click="deletTodo(index)">
+            <div class="text-center" @click="deleteTodo(index)">
               <span class="fa fa-trash"></span>
             </div>
           </td>
@@ -79,7 +79,7 @@ export default {
       }
       this.todo = "";
     },
-    deletTodo(index) {
+    deleteTodo(index) {
       this.todos.splice(index, 1);
     },
     toggleStatus(todoIndex, todoStatusIndex) {
