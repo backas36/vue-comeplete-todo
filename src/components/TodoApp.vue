@@ -10,7 +10,7 @@
         class="form-control"
         v-model="todo"
       />
-      <button class="btn btn-warning rounded-0" @click="submitTodo">
+      <button class="btn btn-primary rounded-0" @click="submitTodo">
         Submit
       </button>
     </div>
