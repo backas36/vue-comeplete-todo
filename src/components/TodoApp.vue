@@ -68,7 +68,8 @@ export default {
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
-      if (!this.editedTodoIndex) {
+      console.log(this.editedTodoIndex);
+      if (this.editedTodoIndex === null) {
         this.todos.push({
           content: this.todo,
           status: 0,
