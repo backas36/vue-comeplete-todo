@@ -38,6 +38,25 @@
             >
               {{ avaliableStatuses[todo.status] }}
             </span>
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Select Status
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li
+                  v-for="(avaliableStatus, index) in avaliableStatuses"
+                  :key="index"
+                >
+                  <a class="dropdown-item" href="#">{{ avaliableStatus }}</a>
+                </li>
+              </ul>
+            </div>
           </td>
           <td>
             <div class="text-center" @click="editTodo(index)">
@@ -68,7 +87,6 @@ export default {
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
-      console.log(this.editedTodoIndex);
       if (this.editedTodoIndex === null) {
         this.todos.push({
           content: this.todo,
