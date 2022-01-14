@@ -3,7 +3,7 @@ on:
   push:
     branches: [master] # run on pushes to master
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # setup the repository in the runner

@@ -31,13 +31,30 @@
             {{ todo.content }}
           </td>
           <td class="fixed-width">
-            <span
-              class="pointer"
-              @click="toggleStatus(index, todo.status)"
-              :class="{ 'text-danger': todo.status === 0 }"
-            >
-              {{ avaliableStatuses[todo.status] }}
-            </span>
+            <div class="dropdown">
+              <button
+                class="btn btn-sm btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+              >
+                {{ avaliableStatuses[todo.status] }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li
+                  v-for="(avaliableStatus, index) in avaliableStatuses"
+                  :key="index"
+                  @click="changeTodoStatus(todo, index)"
+                >
+                  <a
+                    class="dropdown-item"
+                    :class="{ active: todo.status === index }"
+                    href="#"
+                    >{{ avaliableStatus }}</a
+                  >
+                </li>
+              </ul>
+            </div>
           </td>
           <td>
             <div class="text-center" @click="editTodo(index)">
@@ -68,7 +85,7 @@ export default {
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
-      if (!this.editedTodoIndex) {
+      if (this.editedTodoIndex === null) {
         this.todos.push({
           content: this.todo,
           status: 0,
@@ -82,12 +99,8 @@ export default {
     deleteTodo(index) {
       this.todos.splice(index, 1);
     },
-    toggleStatus(todoIndex, todoStatusIndex) {
-      if (todoStatusIndex === this.avaliableStatuses.length - 1) {
-        this.todos[todoIndex].status = 0;
-      } else {
-        this.todos[todoIndex].status = todoStatusIndex + 1;
-      }
+    changeTodoStatus(selectedTodo, selectedStatusIndex) {
+      selectedTodo.status = selectedStatusIndex;
     },
     editTodo(index) {
       this.todo = this.todos[index].content;
