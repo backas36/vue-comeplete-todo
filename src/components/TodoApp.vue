@@ -27,7 +27,12 @@
       </thead>
       <tbody>
         <tr v-for="(todo, index) in todos" :key="index">
-          <td :class="{ finished: todo.status === 2 }">
+          <td
+            :class="{
+              finished: todo.status === 2,
+              isEditing: editedTodoIndex === index,
+            }"
+          >
             {{ todo.content }}
           </td>
           <td class="fixed-width">
@@ -57,12 +62,12 @@
             </div>
           </td>
           <td>
-            <div class="text-center" @click="editTodo(index)">
+            <div class="text-center pointer" @click="editTodo(index)">
               <span class="fa fa-pen"></span>
             </div>
           </td>
           <td>
-            <div class="text-center" @click="deleteTodo(index)">
+            <div class="text-center pointer" @click="deleteTodo(index)">
               <span class="fa fa-trash"></span>
             </div>
           </td>
@@ -113,12 +118,14 @@ export default {
 <style scoped>
 .pointer {
   cursor: pointer;
-  color: green;
 }
 .fixed-width {
   width: 120px;
 }
 .finished {
   text-decoration: line-through;
+}
+.isEditing {
+  color: red;
 }
 </style>
