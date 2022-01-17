@@ -125,7 +125,6 @@ export default {
   watch: {
     todos: {
       handler() {
-        console.log("watch handler");
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
@@ -144,14 +143,11 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
-    console.log(localStorage.getItem("todos"));
     if (localStorage.getItem("todos"))
       this.todos = JSON.parse(localStorage.getItem("todos"));
   },
   methods: {
     submitTodo() {
-      console.log("submit");
       if (this.todo.length === 0) return;
       if (this.editedTodoIndex === null) {
         this.todos.push({
@@ -175,7 +171,6 @@ export default {
       this.editedTodoIndex = index;
     },
     selectFilter(event) {
-      console.log(event.target.value);
       this.currentFilter = event.target.value;
     },
   },
