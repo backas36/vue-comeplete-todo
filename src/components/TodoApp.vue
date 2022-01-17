@@ -14,7 +14,40 @@
         Submit
       </button>
     </div>
-
+    <div class="d-flex mt-5">
+      <div
+        class="form-check form-check-inline"
+        v-for="(avaliableStatus, index) in avaliableStatuses"
+        :key="index"
+      >
+        <label class="form-check-label">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="exampleRadios"
+            id="exampleRadios1"
+            :value="index"
+            checked
+            @click="selectFilter"
+          />
+          {{ avaliableStatus }}
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <label class="form-check-label">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="exampleRadios"
+            id="exampleRadios1"
+            value="all"
+            checked
+            @click="selectFilter"
+          />
+          All
+        </label>
+      </div>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
@@ -25,8 +58,9 @@
           <th scope="col" class="text-center">#</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr v-for="(todo, index) in todos" :key="index">
+        <tr v-for="(todo, index) in visableTodos" :key="index">
           <td
             :class="{
               finished: todo.status === 2,
@@ -85,6 +119,7 @@ export default {
       editedTodoIndex: null,
       avaliableStatuses: ["to-do", "in-progress", "finished"],
       todos: [],
+      currentFilter: "all",
     };
   },
   watch: {
@@ -95,6 +130,18 @@ export default {
       },
       deep: true,
     },
+    currentFilter() {},
+  },
+  computed: {
+    visableTodos() {
+      if (this.currentFilter === "all") {
+        return this.todos;
+      } else {
+        return this.todos.filter(
+          (todo) => todo.status === Number(this.currentFilter)
+        );
+      }
+    },
   },
   mounted() {
     console.log("mounted");
@@ -104,6 +151,7 @@ export default {
   },
   methods: {
     submitTodo() {
+      console.log("submit");
       if (this.todo.length === 0) return;
       if (this.editedTodoIndex === null) {
         this.todos.push({
@@ -125,6 +173,10 @@ export default {
     editTodo(index) {
       this.todo = this.todos[index].content;
       this.editedTodoIndex = index;
+    },
+    selectFilter(event) {
+      console.log(event.target.value);
+      this.currentFilter = event.target.value;
     },
   },
 };
