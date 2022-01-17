@@ -150,9 +150,13 @@ export default {
     submitTodo() {
       if (this.todo.length === 0) return;
       if (this.editedTodoIndex === null) {
+        const now = new Date();
         this.todos.push({
+          id: Math.random.toString(),
           content: this.todo,
           status: 0,
+          created_at: now,
+          updated_at: now,
         });
       } else {
         this.todos[this.editedTodoIndex].content = this.todo;
