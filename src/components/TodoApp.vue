@@ -87,6 +87,21 @@ export default {
       todos: [],
     };
   },
+  watch: {
+    todos: {
+      handler() {
+        console.log("watch handler");
+        localStorage.setItem("todos", JSON.stringify(this.todos));
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    console.log("mounted");
+    console.log(localStorage.getItem("todos"));
+    if (localStorage.getItem("todos"))
+      this.todos = JSON.parse(localStorage.getItem("todos"));
+  },
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
