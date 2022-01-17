@@ -60,11 +60,11 @@
       </thead>
 
       <tbody>
-        <tr v-for="(todo, index) in visableTodos" :key="index">
+        <tr v-for="(todo, index) in visableTodos" :key="todo.id">
           <td
             :class="{
               finished: todo.status === 2,
-              isEditing: editedTodoIndex === index,
+              isEditing: editedTodoId === todo.id,
             }"
           >
             {{ todo.content }}
@@ -96,12 +96,12 @@
             </div>
           </td>
           <td>
-            <div class="text-center pointer" @click="editTodo(index)">
+            <div class="text-center pointer" @click="editTodo(todo.id)">
               <span class="fa fa-pen"></span>
             </div>
           </td>
           <td>
-            <div class="text-center pointer" @click="deleteTodo(index)">
+            <div class="text-center pointer" @click="deleteTodo(todo.id)">
               <span class="fa fa-trash"></span>
             </div>
           </td>
@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       todo: "",
-      editedTodoIndex: null,
+      editedTodoId: null,
       avaliableStatuses: ["to-do", "in-progress", "finished"],
       todos: [],
       currentFilter: "all",
@@ -125,7 +125,6 @@ export default {
   watch: {
     todos: {
       handler() {
-        console.log("watch handler");
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
@@ -144,38 +143,39 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
-    console.log(localStorage.getItem("todos"));
     if (localStorage.getItem("todos"))
       this.todos = JSON.parse(localStorage.getItem("todos"));
   },
   methods: {
     submitTodo() {
-      console.log("submit");
       if (this.todo.length === 0) return;
-      if (this.editedTodoIndex === null) {
+      if (this.editedTodoId === null) {
+        const now = new Date();
         this.todos.push({
+          id: Math.random().toString(),
           content: this.todo,
           status: 0,
+          created_at: now,
+          updated_at: now,
         });
       } else {
-        this.todos[this.editedTodoIndex].content = this.todo;
-        this.editedTodoIndex = null;
+        this.todos.find((todo) => todo.id === this.editedTodoId).content =
+          this.todo;
+        this.editedTodoId = null;
       }
       this.todo = "";
     },
-    deleteTodo(index) {
-      this.todos.splice(index, 1);
+    deleteTodo(todoId) {
+      this.todos = this.todos.filter((todo) => todo.id !== todoId);
     },
     changeTodoStatus(selectedTodo, selectedStatusIndex) {
       selectedTodo.status = selectedStatusIndex;
     },
-    editTodo(index) {
-      this.todo = this.todos[index].content;
-      this.editedTodoIndex = index;
+    editTodo(todoId) {
+      this.todo = this.todos.find((todo) => todo.id === todoId).content;
+      this.editedTodoId = todoId;
     },
     selectFilter(event) {
-      console.log(event.target.value);
       this.currentFilter = event.target.value;
     },
   },
