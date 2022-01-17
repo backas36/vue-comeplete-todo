@@ -14,7 +14,40 @@
         Submit
       </button>
     </div>
-
+    <div class="d-flex mt-5">
+      <div
+        class="form-check form-check-inline"
+        v-for="(avaliableStatus, index) in avaliableStatuses"
+        :key="index"
+      >
+        <label class="form-check-label">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="exampleRadios"
+            id="exampleRadios1"
+            :value="avaliableStatus"
+            checked
+            @click="selectFilter"
+          />
+          {{ avaliableStatus }}
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <label class="form-check-label">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="exampleRadios"
+            id="exampleRadios1"
+            value="all"
+            checked
+            @click="selectFilter"
+          />
+          All
+        </label>
+      </div>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
@@ -25,6 +58,7 @@
           <th scope="col" class="text-center">#</th>
         </tr>
       </thead>
+
       <tbody>
         <tr v-for="(todo, index) in todos" :key="index">
           <td
@@ -125,6 +159,9 @@ export default {
     editTodo(index) {
       this.todo = this.todos[index].content;
       this.editedTodoIndex = index;
+    },
+    selectFilter(event) {
+      console.log(event.target.value);
     },
   },
 };
