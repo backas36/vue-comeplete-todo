@@ -48,6 +48,9 @@
         </label>
       </div>
     </div>
+    <div class="d-flex">
+      <date-time-selector></date-time-selector>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
@@ -114,6 +117,9 @@
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
 export default {
+  components: {
+    DateTimeSelector,
+  },
   data() {
     return {
       todo: "",

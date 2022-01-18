@@ -1,36 +1,31 @@
 <template>
   <div>
-    <h2>Example Initial Dates</h2>
-    <pre>
-      {
-        initialDates: [new Date("2021 09 01 00:00"), new Date("2021 09 03 23:59")],
-      }
-    </pre>
+    <h2>Filter by data-time</h2>
     <date-picker :dateInput="dateInput" :initialDates="dates1" />
-    <br />
-    <pre>
-      {
-        initialDates: [new Date("2021 09 01 00:00"), new Date("2021 09 15 00:00")],
-      }
-    </pre>
-    <date-picker :dateInput="dateInput" :initialDates="dates2" />
   </div>
 </template>
 
 <script>
 import DatePicker from "vue-time-date-range-picker/dist/vdprDatePicker";
 
+const addDaysToDate = (date, days) => {
+  var temp = new Date(date);
+  temp.setDate(temp.getDate() + days);
+  console.log(temp);
+  return temp;
+};
+
 export default {
   components: {
     DatePicker,
   },
   data() {
+    const now = new Date();
     return {
       dateInput: {
         placeholder: "Select Date",
       },
-      dates1: [new Date("2021 09 01 00:00"), new Date("2021 09 03 23:59")],
-      dates2: [new Date("2021 09 01 00:00"), new Date("2021 09 15 00:00")],
+      dates1: [now, addDaysToDate(now, 7)],
     };
   },
 };
