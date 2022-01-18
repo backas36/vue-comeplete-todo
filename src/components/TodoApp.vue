@@ -54,6 +54,17 @@
         @setSelectedDateTimeToTodo="getSelectedDateTime"
       ></date-time-selector>
     </div>
+    <div class="d-flex mt-3">
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          v-model="searchContent"
+        />
+      </form>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
@@ -125,9 +136,9 @@
 import DateTimeSelector from "./DateTimeSelector.vue";
 const now = new Date().toISOString();
 
-const setVisableTodos = (todosStatus, todos) => {
+const setVisableTodos = (todosStatus, todos, searchFilter) => {
   if (todosStatus === "all") {
-    return todos;
+    return todos.filter((todo) => todo.content.includes(searchFilter));
   } else {
     return todos.filter((todo) => todo.status === Number(todosStatus));
   }
@@ -145,6 +156,7 @@ export default {
       todos: [],
       currentFilter: "all",
       selectedDateTime: null,
+      searchContent: "",
     };
   },
   watch: {
@@ -159,7 +171,11 @@ export default {
   computed: {
     visableTodos() {
       if (!this.selectedDateTime) {
-        return setVisableTodos(this.currentFilter, this.todos);
+        return setVisableTodos(
+          this.currentFilter,
+          this.todos,
+          this.searchContent
+        );
       } else {
         const { startDate, endDate } = this.selectedDateTime;
 
@@ -168,7 +184,11 @@ export default {
             Date.parse(todo.updated_at) >= Date.parse(startDate) &&
             Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
-        return setVisableTodos(this.currentFilter, tempTodos);
+        return setVisableTodos(
+          this.currentFilter,
+          tempTodos,
+          this.searchContent
+        );
       }
     },
   },
