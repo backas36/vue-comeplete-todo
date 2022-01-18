@@ -103,7 +103,7 @@
             </div>
           </td>
           <td>
-            {{ new Date(todo.updated_at).toUTCString() }}
+            {{ new Date(todo.updated_at) }}
           </td>
           <td>
             <div class="text-center pointer" @click="editTodo(todo.id)">
@@ -125,6 +125,14 @@
 import DateTimeSelector from "./DateTimeSelector.vue";
 const now = new Date().toISOString();
 
+const setVisableTodos = (todosStatus, todos) => {
+  if (todosStatus === "all") {
+    return todos;
+  } else {
+    return todos.filter((todo) => todo.status === Number(todosStatus));
+  }
+};
+
 export default {
   components: {
     DateTimeSelector,
@@ -142,6 +150,7 @@ export default {
   watch: {
     todos: {
       handler() {
+        this.todos.forEach((todo) => new Date(todo.updated_at).toISOString());
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
@@ -150,21 +159,16 @@ export default {
   computed: {
     visableTodos() {
       if (!this.selectedDateTime) {
-        if (this.currentFilter === "all") {
-          return this.todos;
-        } else {
-          return this.todos.filter(
-            (todo) => todo.status === Number(this.currentFilter)
-          );
-        }
+        return setVisableTodos(this.currentFilter, this.todos);
       } else {
         const { startDate, endDate } = this.selectedDateTime;
 
-        return this.todos.filter(
+        const tempTodos = this.todos.filter(
           (todo) =>
             Date.parse(todo.updated_at) >= Date.parse(startDate) &&
             Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
+        return setVisableTodos(this.currentFilter, tempTodos);
       }
     },
   },
