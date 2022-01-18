@@ -1,7 +1,11 @@
 <template>
   <div>
     <h2>Filter by date-time</h2>
-    <date-picker :dateInput="dateInput" :initialDates="dates1" />
+    <date-picker
+      :dateInput="dateInput"
+      :initialDates="dates1"
+      @date-applied="selectedDate"
+    />
   </div>
 </template>
 
@@ -27,6 +31,11 @@ export default {
       },
       dates1: [now, addDaysToDate(now, 7)],
     };
+  },
+  methods: {
+    selectedDate(startDate, endDate) {
+      console.log(startDate, endDate);
+    },
   },
 };
 </script>
