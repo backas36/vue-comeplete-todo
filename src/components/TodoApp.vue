@@ -63,13 +63,6 @@
           aria-label="Search"
           v-model="searchContent"
         />
-        <button
-          class="btn btn-outline-success"
-          type="submit"
-          @click="onSearchSubmit"
-        >
-          Search
-        </button>
       </form>
     </div>
     <!-- todo list table -->
@@ -143,9 +136,9 @@
 import DateTimeSelector from "./DateTimeSelector.vue";
 const now = new Date().toISOString();
 
-const setVisableTodos = (todosStatus, todos) => {
+const setVisableTodos = (todosStatus, todos, searchFilter) => {
   if (todosStatus === "all") {
-    return todos;
+    return todos.filter((todo) => todo.content.includes(searchFilter));
   } else {
     return todos.filter((todo) => todo.status === Number(todosStatus));
   }
@@ -178,7 +171,11 @@ export default {
   computed: {
     visableTodos() {
       if (!this.selectedDateTime) {
-        return setVisableTodos(this.currentFilter, this.todos);
+        return setVisableTodos(
+          this.currentFilter,
+          this.todos,
+          this.searchContent
+        );
       } else {
         const { startDate, endDate } = this.selectedDateTime;
 
@@ -187,7 +184,11 @@ export default {
             Date.parse(todo.updated_at) >= Date.parse(startDate) &&
             Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
-        return setVisableTodos(this.currentFilter, tempTodos);
+        return setVisableTodos(
+          this.currentFilter,
+          tempTodos,
+          this.searchContent
+        );
       }
     },
   },
@@ -234,7 +235,6 @@ export default {
     getSelectedDateTime(startEndDateTime) {
       this.selectedDateTime = startEndDateTime;
     },
-    onSearchSubmit() {},
   },
 };
 </script>
