@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>Filter by date-time</h2>
+  <div class="d-flex col-12 mt-3">
+    <h5 class="col-3">Filter by date-time</h5>
     <date-picker :dateInput="dateInput" @date-applied="selectedDate" />
   </div>
 </template>
@@ -24,6 +24,7 @@ export default {
     return {
       dateInput: {
         placeholder: "Select Date",
+        inputClass: ["col-10", "form-control", "me-2"],
       },
     };
   },
