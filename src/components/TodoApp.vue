@@ -48,19 +48,26 @@
         </label>
       </div>
     </div>
+    <div class="d-flex">
+      <date-time-selector
+        :selectedDateTime="selectedDateTime"
+        @setSelectedDateTimeToTodo="getSelectedDateTime"
+      ></date-time-selector>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
         <tr>
           <th scope="col">Task</th>
           <th scope="col">Status</th>
+          <th scope="col">Created_At</th>
           <th scope="col" class="text-center">#</th>
           <th scope="col" class="text-center">#</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr v-for="(todo, index) in visableTodos" :key="todo.id">
+        <tr v-for="todo in visableTodos" :key="todo.id">
           <td
             :class="{
               finished: todo.status === 2,
@@ -96,6 +103,9 @@
             </div>
           </td>
           <td>
+            {{ new Date(todo.updated_at) }}
+          </td>
+          <td>
             <div class="text-center pointer" @click="editTodo(todo.id)">
               <span class="fa fa-pen"></span>
             </div>
@@ -112,7 +122,21 @@
 </template>
 
 <script>
+import DateTimeSelector from "./DateTimeSelector.vue";
+const now = new Date().toISOString();
+
+const setVisableTodos = (todosStatus, todos) => {
+  if (todosStatus === "all") {
+    return todos;
+  } else {
+    return todos.filter((todo) => todo.status === Number(todosStatus));
+  }
+};
+
 export default {
+  components: {
+    DateTimeSelector,
+  },
   data() {
     return {
       todo: "",
@@ -120,37 +144,43 @@ export default {
       avaliableStatuses: ["to-do", "in-progress", "finished"],
       todos: [],
       currentFilter: "all",
+      selectedDateTime: null,
     };
   },
   watch: {
     todos: {
       handler() {
+        this.todos.forEach((todo) => new Date(todo.updated_at).toISOString());
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
     },
-    currentFilter() {},
   },
   computed: {
     visableTodos() {
-      if (this.currentFilter === "all") {
-        return this.todos;
+      if (!this.selectedDateTime) {
+        return setVisableTodos(this.currentFilter, this.todos);
       } else {
-        return this.todos.filter(
-          (todo) => todo.status === Number(this.currentFilter)
+        const { startDate, endDate } = this.selectedDateTime;
+
+        const tempTodos = this.todos.filter(
+          (todo) =>
+            Date.parse(todo.updated_at) >= Date.parse(startDate) &&
+            Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
+        return setVisableTodos(this.currentFilter, tempTodos);
       }
     },
   },
   mounted() {
-    if (localStorage.getItem("todos"))
+    if (localStorage.getItem("todos")) {
       this.todos = JSON.parse(localStorage.getItem("todos"));
+    }
   },
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
       if (this.editedTodoId === null) {
-        const now = new Date();
         this.todos.push({
           id: Math.random().toString(),
           content: this.todo,
@@ -159,8 +189,11 @@ export default {
           updated_at: now,
         });
       } else {
-        this.todos.find((todo) => todo.id === this.editedTodoId).content =
-          this.todo;
+        const currentSelectedTodo = this.todos.find(
+          (todo) => todo.id === this.editedTodoId
+        );
+        currentSelectedTodo.content = this.todo;
+        currentSelectedTodo.updated_at = now;
         this.editedTodoId = null;
       }
       this.todo = "";
@@ -170,6 +203,7 @@ export default {
     },
     changeTodoStatus(selectedTodo, selectedStatusIndex) {
       selectedTodo.status = selectedStatusIndex;
+      selectedTodo.updated_at = now;
     },
     editTodo(todoId) {
       this.todo = this.todos.find((todo) => todo.id === todoId).content;
@@ -177,6 +211,9 @@ export default {
     },
     selectFilter(event) {
       this.currentFilter = event.target.value;
+    },
+    getSelectedDateTime(startEndDateTime) {
+      this.selectedDateTime = startEndDateTime;
     },
   },
 };
