@@ -60,7 +60,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="(todo, index) in visableTodos" :key="todo.id">
+        <tr v-for="todo in visableTodos" :key="todo.id">
           <td
             :class="{
               finished: todo.status === 2,
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import DateTimeSelector from "./DateTimeSelector.vue";
 export default {
   data() {
     return {
