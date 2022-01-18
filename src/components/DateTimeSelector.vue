@@ -23,6 +23,7 @@ export default {
   components: {
     DatePicker,
   },
+  props: ["selectedDateTime"],
   data() {
     const now = new Date();
     return {
@@ -34,7 +35,8 @@ export default {
   },
   methods: {
     selectedDate(startDate, endDate) {
-      console.log(startDate, endDate);
+      const startEndDateTime = { startDate, endDate };
+      this.$emit("setSelectedDateTimeToTodo", startEndDateTime);
     },
   },
 };

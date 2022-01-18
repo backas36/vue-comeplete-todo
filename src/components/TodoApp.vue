@@ -49,7 +49,10 @@
       </div>
     </div>
     <div class="d-flex">
-      <date-time-selector></date-time-selector>
+      <date-time-selector
+        :selectedDateTime="selectedDateTime"
+        @setSelectedDateTimeToTodo="getSelectedDateTime"
+      ></date-time-selector>
     </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
@@ -131,6 +134,7 @@ export default {
       avaliableStatuses: ["to-do", "in-progress", "finished"],
       todos: [],
       currentFilter: "all",
+      selectedDateTime: null,
     };
   },
   watch: {
@@ -188,6 +192,9 @@ export default {
     },
     selectFilter(event) {
       this.currentFilter = event.target.value;
+    },
+    getSelectedDateTime(startEndDateTime) {
+      this.selectedDateTime = startEndDateTime;
     },
   },
 };
