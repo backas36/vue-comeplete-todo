@@ -14,7 +14,7 @@
         Submit
       </button>
     </div>
-    <div class="d-flex mt-5">
+    <div class="d-flex mt-3">
       <div
         class="form-check form-check-inline"
         v-for="(avaliableStatus, index) in avaliableStatuses"
@@ -48,14 +48,13 @@
         </label>
       </div>
     </div>
-    <div class="d-flex">
-      <date-time-selector
-        :selectedDateTime="selectedDateTime"
-        @setSelectedDateTimeToTodo="getSelectedDateTime"
-      ></date-time-selector>
-    </div>
-    <div class="d-flex mt-3">
-      <form class="d-flex">
+    <date-time-selector
+      :selectedDateTime="selectedDateTime"
+      @setSelectedDateTimeToTodo="getSelectedDateTime"
+    ></date-time-selector>
+    <div class="d-flex mt-3 col-12">
+      <h5 class="col-3">Search task content</h5>
+      <form class="col-8">
         <input
           class="form-control me-2"
           type="search"
@@ -64,6 +63,23 @@
           v-model="searchContent"
         />
       </form>
+    </div>
+    <div class="d-flex mt-3 col-12">
+      <h5 class="col-3">task sort by</h5>
+      <select
+        class="form-select form-select-sm"
+        aria-label=".form-select-sm example"
+        v-model="selectedSort"
+      >
+        <option
+          v-for="(sortOption, index) in sortOptions"
+          :key="sortOption"
+          :value="index"
+          :selected="index === selectedSort"
+        >
+          Sort by {{ sortOption }}
+        </option>
+      </select>
     </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
@@ -136,7 +152,30 @@
 import DateTimeSelector from "./DateTimeSelector.vue";
 const now = new Date().toISOString();
 
-const setVisableTodos = (todosStatus, todos, searchFilter) => {
+const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
+  const todosBySortStatus = (sortStatus) => {
+    if (sortStatus === 1) {
+      return todos.sort((a, b) => {
+        let x = a.content.toLowerCase();
+        let y = b.content.toLowerCase();
+        if (x < y) {
+          return -1;
+        }
+        if (x > y) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (sortStatus === 2) {
+      return todos.sort((a, b) => a.status - b.status);
+    } else {
+      return todos.sort(
+        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at)
+      );
+    }
+  };
+
+  todosBySortStatus(sortStatus);
   if (todosStatus === "all") {
     return todos.filter((todo) => todo.content.includes(searchFilter));
   } else {
@@ -153,6 +192,8 @@ export default {
       todo: "",
       editedTodoId: null,
       avaliableStatuses: ["to-do", "in-progress", "finished"],
+      sortOptions: ["time(default)", "content", "status"],
+      selectedSort: 0,
       todos: [],
       currentFilter: "all",
       selectedDateTime: null,
@@ -174,7 +215,8 @@ export default {
         return setVisableTodos(
           this.currentFilter,
           this.todos,
-          this.searchContent
+          this.searchContent,
+          this.selectedSort
         );
       } else {
         const { startDate, endDate } = this.selectedDateTime;
@@ -187,7 +229,8 @@ export default {
         return setVisableTodos(
           this.currentFilter,
           tempTodos,
-          this.searchContent
+          this.searchContent,
+          this.selectedSort
         );
       }
     },
