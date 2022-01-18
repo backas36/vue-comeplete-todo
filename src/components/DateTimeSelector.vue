@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Filter by data-time</h2>
+    <h2>Filter by date-time</h2>
     <date-picker :dateInput="dateInput" :initialDates="dates1" />
   </div>
 </template>
