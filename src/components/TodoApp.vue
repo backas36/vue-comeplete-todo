@@ -57,6 +57,7 @@
         <tr>
           <th scope="col">Task</th>
           <th scope="col">Status</th>
+          <th scope="col">Created_At</th>
           <th scope="col" class="text-center">#</th>
           <th scope="col" class="text-center">#</th>
         </tr>
@@ -97,6 +98,9 @@
                 </li>
               </ul>
             </div>
+          </td>
+          <td>
+            {{ todo.updated_at.toLocaleString() }}
           </td>
           <td>
             <div class="text-center pointer" @click="editTodo(todo.id)">
