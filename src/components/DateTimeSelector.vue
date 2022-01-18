@@ -1,11 +1,7 @@
 <template>
   <div>
     <h2>Filter by date-time</h2>
-    <date-picker
-      :dateInput="dateInput"
-      :initialDates="dates1"
-      @date-applied="selectedDate"
-    />
+    <date-picker :dateInput="dateInput" @date-applied="selectedDate" />
   </div>
 </template>
 
@@ -29,7 +25,6 @@ export default {
       dateInput: {
         placeholder: "Select Date",
       },
-      dates1: [now, addDaysToDate(now, 7)],
     };
   },
   methods: {
