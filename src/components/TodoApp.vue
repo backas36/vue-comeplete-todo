@@ -54,6 +54,24 @@
         @setSelectedDateTimeToTodo="getSelectedDateTime"
       ></date-time-selector>
     </div>
+    <div class="d-flex mt-3">
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          v-model="searchContent"
+        />
+        <button
+          class="btn btn-outline-success"
+          type="submit"
+          @click="onSearchSubmit"
+        >
+          Search
+        </button>
+      </form>
+    </div>
     <!-- todo list table -->
     <table class="table table-bordered mt-5">
       <thead>
@@ -145,6 +163,7 @@ export default {
       todos: [],
       currentFilter: "all",
       selectedDateTime: null,
+      searchContent: "",
     };
   },
   watch: {
@@ -215,6 +234,7 @@ export default {
     getSelectedDateTime(startEndDateTime) {
       this.selectedDateTime = startEndDateTime;
     },
+    onSearchSubmit() {},
   },
 };
 </script>
