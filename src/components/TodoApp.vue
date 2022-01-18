@@ -103,7 +103,7 @@
             </div>
           </td>
           <td>
-            {{ todo.updated_at.toLocaleString() }}
+            {{ new Date(todo.updated_at).toUTCString() }}
           </td>
           <td>
             <div class="text-center pointer" @click="editTodo(todo.id)">
@@ -140,32 +140,45 @@ export default {
   watch: {
     todos: {
       handler() {
+        //this.todos.forEach(
+        //  //(todo) => (todo.updated_at = todo.updated_at.toUTCString())
+        //);
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
     },
-    currentFilter() {},
   },
   computed: {
     visableTodos() {
-      if (this.currentFilter === "all") {
-        return this.todos;
+      if (!this.selectedDateTime) {
+        if (this.currentFilter === "all") {
+          return this.todos;
+        } else {
+          return this.todos.filter(
+            (todo) => todo.status === Number(this.currentFilter)
+          );
+        }
       } else {
+        const { startDate, endDate } = this.selectedDateTime;
+
         return this.todos.filter(
-          (todo) => todo.status === Number(this.currentFilter)
+          (todo) =>
+            Date.parse(todo.updated_at) >= Date.parse(startDate) &&
+            Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
       }
     },
   },
   mounted() {
-    if (localStorage.getItem("todos"))
+    if (localStorage.getItem("todos")) {
       this.todos = JSON.parse(localStorage.getItem("todos"));
+    }
   },
   methods: {
     submitTodo() {
       if (this.todo.length === 0) return;
       if (this.editedTodoId === null) {
-        const now = new Date();
+        const now = new Date().toISOString();
         this.todos.push({
           id: Math.random().toString(),
           content: this.todo,

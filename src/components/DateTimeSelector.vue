@@ -15,7 +15,6 @@ import DatePicker from "vue-time-date-range-picker/dist/vdprDatePicker";
 const addDaysToDate = (date, days) => {
   var temp = new Date(date);
   temp.setDate(temp.getDate() + days);
-  console.log(temp);
   return temp;
 };
 
