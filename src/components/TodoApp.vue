@@ -123,6 +123,8 @@
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
+const now = new Date().toISOString();
+
 export default {
   components: {
     DateTimeSelector,
@@ -140,9 +142,6 @@ export default {
   watch: {
     todos: {
       handler() {
-        //this.todos.forEach(
-        //  //(todo) => (todo.updated_at = todo.updated_at.toUTCString())
-        //);
         localStorage.setItem("todos", JSON.stringify(this.todos));
       },
       deep: true,
@@ -178,7 +177,6 @@ export default {
     submitTodo() {
       if (this.todo.length === 0) return;
       if (this.editedTodoId === null) {
-        const now = new Date().toISOString();
         this.todos.push({
           id: Math.random().toString(),
           content: this.todo,
@@ -187,8 +185,11 @@ export default {
           updated_at: now,
         });
       } else {
-        this.todos.find((todo) => todo.id === this.editedTodoId).content =
-          this.todo;
+        const currentSelectedTodo = this.todos.find(
+          (todo) => todo.id === this.editedTodoId
+        );
+        currentSelectedTodo.content = this.todo;
+        currentSelectedTodo.updated_at = now;
         this.editedTodoId = null;
       }
       this.todo = "";
@@ -198,6 +199,7 @@ export default {
     },
     changeTodoStatus(selectedTodo, selectedStatusIndex) {
       selectedTodo.status = selectedStatusIndex;
+      selectedTodo.updated_at = now;
     },
     editTodo(todoId) {
       this.todo = this.todos.find((todo) => todo.id === todoId).content;
