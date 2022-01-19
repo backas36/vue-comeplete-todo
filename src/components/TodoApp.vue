@@ -95,7 +95,6 @@
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
-import Pagination from "./Pagination.vue";
 import DataList from "./DataList.vue";
 import { setVisableTodos, saveTodosToLocal, getTodosFromLocal } from "../utils";
 
