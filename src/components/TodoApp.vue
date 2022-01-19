@@ -89,7 +89,6 @@
       @edit-todo="editTodo"
       @delete-todo="deleteTodo"
     />
-    <Pagination />
   </div>
 </template>
 
