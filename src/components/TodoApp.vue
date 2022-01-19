@@ -89,14 +89,15 @@
       @edit-todo="editTodo"
       @delete-todo="deleteTodo"
     />
+    <Pagination />
   </div>
 </template>
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
-import Pagination from "./pagination/Pagination.vue";
+import Pagination from "./Pagination.vue";
 import DataList from "./DataList.vue";
-import { setVisableTodos } from "../utils";
+import { setVisableTodos, saveTodosToLocal, getTodosFromLocal } from "../utils";
 
 const now = new Date().toISOString();
 
@@ -122,42 +123,34 @@ export default {
   watch: {
     todos: {
       handler() {
-        this.todos.forEach((todo) => new Date(todo.updated_at).toISOString());
-        localStorage.setItem("todos", JSON.stringify(this.todos));
+        console.log("watch");
+        saveTodosToLocal(this.todos);
       },
       deep: true,
     },
   },
   computed: {
     visableTodos() {
-      if (!this.selectedDateTime) {
-        return setVisableTodos(
-          this.currentFilter,
-          this.todos,
-          this.searchContent,
-          this.selectedSort
-        );
-      } else {
-        const { startDate, endDate } = this.selectedDateTime;
-
-        const tempTodos = this.todos.filter(
+      console.log("computed");
+      const tempTodos = this.todos;
+      if (this.selectedDateTime) {
+        tempTodos.filter(
           (todo) =>
             Date.parse(todo.updated_at) >= Date.parse(startDate) &&
             Date.parse(todo.updated_at) <= Date.parse(endDate)
         );
-        return setVisableTodos(
-          this.currentFilter,
-          tempTodos,
-          this.searchContent,
-          this.selectedSort
-        );
       }
+
+      return setVisableTodos(
+        this.currentFilter,
+        tempTodos,
+        this.searchContent,
+        this.selectedSort
+      );
     },
   },
   mounted() {
-    if (localStorage.getItem("todos")) {
-      this.todos = JSON.parse(localStorage.getItem("todos"));
-    }
+    this.todos = getTodosFromLocal();
   },
   methods: {
     submitTodo() {

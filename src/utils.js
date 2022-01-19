@@ -1,5 +1,6 @@
 export function setVisableTodos(todosStatus, todos, searchFilter, sortStatus) {
   const todosBySortStatus = (sortStatus) => {
+    console.log("sort");
     if (sortStatus === 1) {
       return todos.sort((a, b) => {
         let x = a.content.toLowerCase();
@@ -27,4 +28,13 @@ export function setVisableTodos(todosStatus, todos, searchFilter, sortStatus) {
   } else {
     return todos.filter((todo) => todo.status === Number(todosStatus));
   }
+}
+
+export function saveTodosToLocal(todos) {
+  todos.forEach((todo) => new Date(todo.updated_at).toISOString());
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+export function getTodosFromLocal() {
+  return JSON.parse(localStorage.getItem("todos")) || [];
 }
