@@ -89,13 +89,11 @@
       @edit-todo="editTodo"
       @delete-todo="deleteTodo"
     />
-    <Pagination />
   </div>
 </template>
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
-import Pagination from "./Pagination.vue";
 import DataList from "./DataList.vue";
 import { setVisableTodos, saveTodosToLocal, getTodosFromLocal } from "../utils";
 
@@ -104,7 +102,6 @@ const now = new Date().toISOString();
 export default {
   components: {
     DateTimeSelector,
-    Pagination,
     DataList,
   },
   data() {
