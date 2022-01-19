@@ -12,7 +12,6 @@
 
     <tbody>
       <tr v-for="list in lists" :key="list.id">
-        <td></td>
         <td
           :class="{
             finished: list.status === 2,
