@@ -102,7 +102,6 @@ const now = new Date().toISOString();
 export default {
   components: {
     DateTimeSelector,
-    Pagination,
     DataList,
   },
   data() {
