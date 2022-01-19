@@ -145,26 +145,24 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- pagination -->
-    <nav aria-label="Page navigation ">
-      <ul class="pagination justify-content-center">
-        <li class="page-item disabled">
-          <a class="page-link">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
+    <Pagination />
+    <hr />
+    <DataList
+      :data-source="todos"
+      :edited-todo-id="editedTodoId"
+      :avaliable-statuses="avaliableStatuses"
+      @change-todo-status="changeTodoStatus"
+      @edit-todo="editTodo"
+      @delete-todo="deleteTodo"
+    />
   </div>
 </template>
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
+import Pagination from "./pagination/Pagination.vue";
+import DataList from "./DataList.vue";
+
 const now = new Date().toISOString();
 
 const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
@@ -201,6 +199,8 @@ const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
 export default {
   components: {
     DateTimeSelector,
+    Pagination,
+    DataList,
   },
   data() {
     return {
@@ -296,18 +296,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-.fixed-width {
-  width: 120px;
-}
-.finished {
-  text-decoration: line-through;
-}
-.isEditing {
-  color: red;
-}
-</style>
