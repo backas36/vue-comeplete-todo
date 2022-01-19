@@ -81,75 +81,22 @@
         </option>
       </select>
     </div>
-    <!-- todo list table -->
-    <table class="table table-bordered mt-5">
-      <thead>
-        <tr>
-          <th scope="col">Task</th>
-          <th scope="col">Status</th>
-          <th scope="col">Created_At</th>
-          <th scope="col" class="text-center">#</th>
-          <th scope="col" class="text-center">#</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="todo in visableTodos" :key="todo.id">
-          <td
-            :class="{
-              finished: todo.status === 2,
-              isEditing: editedTodoId === todo.id,
-            }"
-          >
-            {{ todo.content }}
-          </td>
-          <td class="fixed-width">
-            <div class="dropdown">
-              <button
-                class="btn btn-sm btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-              >
-                {{ avaliableStatuses[todo.status] }}
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li
-                  v-for="(avaliableStatus, index) in avaliableStatuses"
-                  :key="index"
-                  @click="changeTodoStatus(todo, index)"
-                >
-                  <a
-                    class="dropdown-item"
-                    :class="{ active: todo.status === index }"
-                    href="#"
-                    >{{ avaliableStatus }}</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </td>
-          <td>
-            {{ new Date(todo.updated_at) }}
-          </td>
-          <td>
-            <div class="text-center pointer" @click="editTodo(todo.id)">
-              <span class="fa fa-pen"></span>
-            </div>
-          </td>
-          <td>
-            <div class="text-center pointer" @click="deleteTodo(todo.id)">
-              <span class="fa fa-trash"></span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <DataList
+      :data-source="visableTodos"
+      :edited-todo-id="editedTodoId"
+      :avaliable-statuses="avaliableStatuses"
+      @change-todo-status="changeTodoStatus"
+      @edit-todo="editTodo"
+      @delete-todo="deleteTodo"
+    />
   </div>
 </template>
 
 <script>
 import DateTimeSelector from "./DateTimeSelector.vue";
+import Pagination from "./pagination/Pagination.vue";
+import DataList from "./DataList.vue";
+
 const now = new Date().toISOString();
 
 const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
@@ -186,6 +133,8 @@ const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
 export default {
   components: {
     DateTimeSelector,
+    Pagination,
+    DataList,
   },
   data() {
     return {
@@ -281,18 +230,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-.fixed-width {
-  width: 120px;
-}
-.finished {
-  text-decoration: line-through;
-}
-.isEditing {
-  color: red;
-}
-</style>
