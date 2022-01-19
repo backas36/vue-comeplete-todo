@@ -96,39 +96,9 @@
 import DateTimeSelector from "./DateTimeSelector.vue";
 import Pagination from "./pagination/Pagination.vue";
 import DataList from "./DataList.vue";
+import { setVisableTodos } from "../utils";
 
 const now = new Date().toISOString();
-
-const setVisableTodos = (todosStatus, todos, searchFilter, sortStatus) => {
-  const todosBySortStatus = (sortStatus) => {
-    if (sortStatus === 1) {
-      return todos.sort((a, b) => {
-        let x = a.content.toLowerCase();
-        let y = b.content.toLowerCase();
-        if (x < y) {
-          return -1;
-        }
-        if (x > y) {
-          return 1;
-        }
-        return 0;
-      });
-    } else if (sortStatus === 2) {
-      return todos.sort((a, b) => a.status - b.status);
-    } else {
-      return todos.sort(
-        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at)
-      );
-    }
-  };
-
-  todosBySortStatus(sortStatus);
-  if (todosStatus === "all") {
-    return todos.filter((todo) => todo.content.includes(searchFilter));
-  } else {
-    return todos.filter((todo) => todo.status === Number(todosStatus));
-  }
-};
 
 export default {
   components: {
