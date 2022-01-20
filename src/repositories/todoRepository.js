@@ -11,21 +11,22 @@ export const saveData = () => {
 
 export const listTodos = (filter, sort) => {
   let result = [...data];
+
   if (filter) {
+    console.log(filter.status);
     if (filter.status) {
-      if (filter.status === "all") return result;
       result = result.filter((todo) => todo.status === Number(filter.status));
     }
 
     if (filter.updated_at && filter.updated_at.start && filter.updated_at.end) {
       result = result.filter(
         (todo) =>
-          todo.updated_at >= filter.updated_at.start &&
-          todo.updated_at <= filter.updated_at.end
+          Date.parse(todo.updated_at) >= Date.parse(filter.updated_at.start) &&
+          Date.parse(todo.updated_at) <= Date.parse(filter.updated_at.end)
       );
     }
   }
-  console.log(sort);
+
   if (sort === 0) {
     result.sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at));
   }

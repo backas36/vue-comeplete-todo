@@ -40,7 +40,7 @@
               type="radio"
               name="exampleRadios"
               id="exampleRadios2"
-              value="all"
+              value="0"
               checked
               @click="selectFilter"
             />
@@ -48,12 +48,12 @@
           </label>
         </div>
       </div>
-      <!--
+
       <date-time-selector
         :selectedDateTime="selectedDateTime"
         @setSelectedDateTimeToTodo="getSelectedDateTime"
       ></date-time-selector>
-      <div class="d-flex mt-3 col-12">
+      <!--<div class="d-flex mt-3 col-12">
         <h5 class="col-3">Search task content</h5>
         <form class="col-8">
           <input
@@ -64,8 +64,8 @@
             v-model="searchContent"
           />
         </form>
-      </div>
-     -->
+      </div>-->
+
       <div class="d-flex mt-3 col-12">
         <h5 class="col-3">task sort by</h5>
         <select
@@ -96,6 +96,7 @@
   </div>
 </template>
 <script>
+import DateTimeSelector from "./components/DateTimeSelector.vue";
 import DataList from "./components/DataList.vue";
 import {
   deleteToDoById,
@@ -105,17 +106,17 @@ import {
   updateTodoById,
 } from "../src/services/todoServices";
 export default {
-  components: { DataList },
+  components: { DataList, DateTimeSelector },
   data() {
     return {
       todoContent: null,
       editedTodoId: null,
       todos: [],
       avaliableStatuses: ["to-do", "in-progress", "finished"],
-      currentFilter: "all",
-      filter: {},
+      currentFilter: 0,
+      filter: { status: 0 },
       sortOptions: ["time(default)", "content", "status"],
-
+      selectedDateTime: null,
       selectedSort: 0,
     };
   },
@@ -124,6 +125,17 @@ export default {
     this.listTodos();
   },
   methods: {
+    getSelectedDateTime(startEndDateTime) {
+      this.selectedDateTime = startEndDateTime;
+      this.filter = {
+        status: this.currentFilter,
+        updated_at: {
+          start: this.selectedDateTime.startDate,
+          end: this.selectedDateTime.endDate,
+        },
+      };
+      this.listTodos();
+    },
     onChangeSort() {
       this.listTodos();
     },
