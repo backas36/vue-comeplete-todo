@@ -3,7 +3,6 @@
     <div class="container">
       <h2>Assignment - Todo App with Vue</h2>
 
-      <!-- input -->
       <div class="d-flex">
         <input
           type="text"
@@ -15,7 +14,7 @@
           Submit
         </button>
       </div>
-      <!--<div class="d-flex mt-3">
+      <div class="d-flex mt-3">
         <div
           class="form-check form-check-inline"
           v-for="(avaliableStatus, index) in avaliableStatuses"
@@ -49,6 +48,7 @@
           </label>
         </div>
       </div>
+      <!--
       <date-time-selector
         :selectedDateTime="selectedDateTime"
         @setSelectedDateTimeToTodo="getSelectedDateTime"
@@ -82,14 +82,7 @@
           </option>
         </select>
       </div>
-      <DataList
-        :data-source="todos"
-        :edited-todo-id="editedTodoId"
-        :avaliable-statuses="avaliableStatuses"
-        @change-todo-status="changeTodoStatus"
-        @edit-todo="selectTodo"
-        @delete-todo="deleteTodo"
-      />-->
+     -->
       <DataList
         :data-source="todos"
         :edited-todo-id="editedTodoId"
@@ -118,6 +111,8 @@ export default {
       editedTodoId: null,
       todos: [],
       avaliableStatuses: ["to-do", "in-progress", "finished"],
+      currentFilter: "all",
+      filter: {},
     };
   },
   computed: {},
@@ -125,6 +120,11 @@ export default {
     this.listTodos();
   },
   methods: {
+    selectFilter(event) {
+      this.currentFilter = event.target.value;
+      this.filter = { status: this.currentFilter };
+      this.listTodos();
+    },
     submitTodo() {
       if (this.todoContent.length === 0) return;
       const todoValue = this.todoContent;
@@ -156,7 +156,7 @@ export default {
       this.editedTodoId = todoId;
     },
     listTodos() {
-      this.todos = listTodoItems();
+      this.todos = listTodoItems(this.filter);
       this.editedTodoId = null;
     },
     addTodo(todo) {

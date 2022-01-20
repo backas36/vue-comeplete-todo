@@ -9,8 +9,22 @@ export const saveData = () => {
   localStorage.setItem(itemKey, JSON.stringify(data));
 };
 
-export const listTodos = () => {
+export const listTodos = (filter) => {
   let result = [...data];
+  if (filter) {
+    if (filter.status) {
+      if (filter.status === "all") return result;
+      result = result.filter((todo) => todo.status === Number(filter.status));
+    }
+
+    if (filter.updated_at && filter.updated_at.start && filter.updated_at.end) {
+      result = result.filter(
+        (todo) =>
+          todo.updated_at >= filter.updated_at.start &&
+          todo.updated_at <= filter.updated_at.end
+      );
+    }
+  }
   return result;
 };
 export const updateTodo = (todo) => {

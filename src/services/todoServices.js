@@ -12,7 +12,7 @@ export const initialize = () => {
 };
 export const saveState = () => saveData();
 
-export const listTodoItems = () => listTodos();
+export const listTodoItems = (filter) => listTodos(filter);
 
 export const getTodoById = (id) => getTodo(id);
 
