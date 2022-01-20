@@ -12,7 +12,8 @@ export const initialize = () => {
 };
 export const saveState = () => saveData();
 
-export const listTodoItems = (filter, sort) => listTodos(filter, sort);
+export const listTodoItems = (filter, sort, search) =>
+  listTodos(filter, sort, search);
 
 export const getTodoById = (id) => getTodo(id);
 

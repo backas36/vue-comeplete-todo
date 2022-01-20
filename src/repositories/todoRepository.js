@@ -9,7 +9,7 @@ export const saveData = () => {
   localStorage.setItem(itemKey, JSON.stringify(data));
 };
 
-export const listTodos = (filter, sort) => {
+export const listTodos = (filter, sort, search) => {
   let result = [...data];
   if (search) {
     result = result.filter((todo) => todo.content.includes(search));
