@@ -92,14 +92,12 @@
         @edit-todo="selectTodo"
         @delete-todo="deleteTodo"
       />
-      <Pagination />
     </div>
   </div>
 </template>
 <script>
 import DateTimeSelector from "./components/DateTimeSelector.vue";
 import DataList from "./components/DataList.vue";
-import Pagination from "./components/Pagination.vue";
 import {
   deleteToDoById,
   insertTodo,
@@ -108,7 +106,7 @@ import {
   updateTodoById,
 } from "../src/services/todoServices";
 export default {
-  components: { DataList, DateTimeSelector, Pagination },
+  components: { DataList, DateTimeSelector },
   data() {
     return {
       todoContent: null,

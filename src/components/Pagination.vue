@@ -1,14 +1,28 @@
 <template>
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-      <li class="page-item disabled" @click="prePage">
+      <li
+        class="page-item"
+        :class="currentPage === 0 ? 'disabled' : ''"
+        @click="prePage"
+      >
         <span class="page-link">Previous</span>
       </li>
-      <li class="page-item" v-for="i in pageNumbers" @click="page(i)" :key="i">
-        <span class="page-link">{{ i }}</span>
+      <li
+        v-for="page in pageNumbers"
+        :key="page"
+        class="page-item"
+        :class="page - 1 === currentPage ? 'active' : ''"
+        @click="page(page)"
+      >
+        <span class="page-link">{{ page }}</span>
       </li>
 
-      <li class="page-item" @click="nextPage">
+      <li
+        class="page-item"
+        :class="currentPage === pageNumbers - 1 ? 'disabled' : ''"
+        @click="nextPage"
+      >
         <span class="page-link">Next</span>
       </li>
     </ul>
@@ -16,17 +30,28 @@
 </template>
 <script>
 export default {
+  props: {
+    dataSource: Array,
+  },
   data() {
     return {
-      data: [],
+      data: this.dataSource,
       totalPages: [],
       pageSize: 2,
-      pageNumbers: 5,
+      pageNumbers: 1,
       dataShow: [],
       currentPage: 0,
     };
   },
-  create() {
+  watch: {
+    dataSource: {
+      handler(newValue) {
+        this.data = newValue;
+      },
+    },
+  },
+  created() {
+    console.log(this.data);
     this.pageNumbers = Math.ceil(this.data.length / this.pageSize) || 1;
     for (let i = 0; i < this.pageNumbers; i++) {
       this.totalPages[i] = this.data.slice(
