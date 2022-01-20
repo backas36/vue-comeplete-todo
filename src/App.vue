@@ -54,7 +54,7 @@
       ></date-time-selector>
       <div class="d-flex mt-3 col-12">
         <h5 class="col-3">Search task content</h5>
-        <form class="col-8">
+        <form class="col-8" @submit.prevent="listTodos">
           <input
             class="form-control me-2"
             type="search"
@@ -178,10 +178,11 @@ export default {
       this.editedTodoId = todoId;
     },
     listTodos() {
+      console.log(this.searchContent);
       this.todos = listTodoItems(
-        this.searchContent,
         this.filter,
-        this.selectedSort
+        this.selectedSort,
+        this.searchContent
       );
       this.editedTodoId = null;
     },
