@@ -12,7 +12,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="list in lists" :key="list.id">
+        <tr v-for="list in visibleLists" :key="list.id">
           <td
             :class="{
               finished: list.status === 2,
@@ -69,15 +69,38 @@
         </tr>
       </tbody>
     </table>
-    <Pagination :data-source="dataSource" />
+    <nav aria-label="Page navigation ">
+      <ul class="pagination justify-content-center">
+        <li
+          class="page-item"
+          :class="currentPage === 0 ? 'disabled' : ''"
+          @click="prePage"
+        >
+          <span class="page-link">Previous</span>
+        </li>
+        <li
+          v-for="i in pageNumbers"
+          :key="i + 'id'"
+          class="page-item"
+          :class="i === currentPage + 1 ? 'active' : ''"
+          @click="page(i)"
+        >
+          <span class="page-link">{{ i }}</span>
+        </li>
+
+        <li
+          class="page-item"
+          :class="currentPage === pageNumbers - 1 ? 'disabled' : ''"
+          @click="nextPage"
+        >
+          <span class="page-link">Next</span>
+        </li>
+      </ul>
+    </nav>
   </section>
 </template>
 <script>
-import Pagination from "./Pagination.vue";
 export default {
-  components: {
-    Pagination,
-  },
   props: {
     dataSource: Array,
     editedTodoId: String,
@@ -86,14 +109,48 @@ export default {
   data() {
     return {
       lists: this.dataSource,
+      totalPages: [],
+      pageSize: 2,
+      pageNumbers: 1,
+      currentPage: 0,
+      visibleLists: [],
     };
   },
   watch: {
     dataSource: {
       handler(newValue) {
         this.lists = newValue;
+        this.pageNumbers = Math.ceil(this.lists.length / this.pageSize) || 1;
+        for (let i = 0; i < this.pageNumbers; i++) {
+          this.totalPages[i] = this.lists.slice(
+            this.pageSize * i,
+            this.pageSize * (i + 1)
+          );
+        }
+        this.setVisibleLists();
       },
       deep: true,
+    },
+  },
+  created() {
+    this.setVisibleLists();
+  },
+  methods: {
+    nextPage() {
+      if (this.currentPage === this.pageNumbers - 1) return;
+      this.visibleLists = this.totalPages[++this.currentPage];
+    },
+    prePage() {
+      if (this.currentPage === 0) return;
+      this.visibleLists = this.totalPages[++this.currentPage];
+    },
+    page(num) {
+      this.currentPage = num - 1;
+      this.visibleLists = this.totalPages[num - 1];
+    },
+    setVisibleLists() {
+      this.currentPage = 0;
+      this.visibleLists = this.totalPages[this.currentPage];
     },
   },
 };

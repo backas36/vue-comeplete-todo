@@ -13,7 +13,7 @@ export const listTodos = (filter, sort) => {
   let result = [...data];
 
   if (filter) {
-    if (filter.status) {
+    if (filter.status !== "3") {
       result = result.filter((todo) => todo.status === Number(filter.status));
     }
 

@@ -27,7 +27,6 @@
               name="exampleRadios"
               id="exampleRadios1"
               :value="index"
-              checked
               @click="selectFilter"
             />
             {{ avaliableStatus }}
@@ -40,8 +39,8 @@
               type="radio"
               name="exampleRadios"
               id="exampleRadios2"
-              value="0"
-              checked
+              value="3"
+              :checked="currentFilter === '3'"
               @click="selectFilter"
             />
             All
@@ -113,14 +112,13 @@ export default {
       editedTodoId: null,
       todos: [],
       avaliableStatuses: ["to-do", "in-progress", "finished"],
-      currentFilter: 0,
+      currentFilter: "3",
       filter: { status: 0 },
       sortOptions: ["time(default)", "content", "status"],
       selectedDateTime: null,
       selectedSort: 0,
     };
   },
-  computed: {},
   mounted() {
     this.listTodos();
   },
@@ -161,6 +159,9 @@ export default {
           updated_at: new Date(),
         });
       }
+      this.currentFilter = "3";
+      this.filter = { status: this.currentFilter };
+
       this.listTodos();
       this.todoContent = "";
     },
@@ -176,6 +177,7 @@ export default {
       this.editedTodoId = todoId;
     },
     listTodos() {
+      console.log(this.filter);
       this.todos = listTodoItems(this.filter, this.selectedSort);
       this.editedTodoId = null;
     },
