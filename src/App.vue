@@ -65,12 +65,14 @@
           />
         </form>
       </div>
+     -->
       <div class="d-flex mt-3 col-12">
         <h5 class="col-3">task sort by</h5>
         <select
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
           v-model="selectedSort"
+          @change="onChangeSort"
         >
           <option
             v-for="(sortOption, index) in sortOptions"
@@ -82,7 +84,6 @@
           </option>
         </select>
       </div>
-     -->
       <DataList
         :data-source="todos"
         :edited-todo-id="editedTodoId"
@@ -113,6 +114,9 @@ export default {
       avaliableStatuses: ["to-do", "in-progress", "finished"],
       currentFilter: "all",
       filter: {},
+      sortOptions: ["time(default)", "content", "status"],
+
+      selectedSort: 0,
     };
   },
   computed: {},
@@ -120,6 +124,9 @@ export default {
     this.listTodos();
   },
   methods: {
+    onChangeSort() {
+      this.listTodos();
+    },
     selectFilter(event) {
       this.currentFilter = event.target.value;
       this.filter = { status: this.currentFilter };
@@ -143,6 +150,7 @@ export default {
         });
       }
       this.listTodos();
+      this.todoContent = "";
     },
     changeTodoStatus(selectedTodo, selectedStatusIndex) {
       this.updateTodo(selectedTodo.id, {
@@ -156,7 +164,7 @@ export default {
       this.editedTodoId = todoId;
     },
     listTodos() {
-      this.todos = listTodoItems(this.filter);
+      this.todos = listTodoItems(this.filter, this.selectedSort);
       this.editedTodoId = null;
     },
     addTodo(todo) {
