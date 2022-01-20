@@ -11,7 +11,9 @@ export const saveData = () => {
 
 export const listTodos = (filter, sort) => {
   let result = [...data];
-
+  if (search) {
+    result = result.filter((todo) => todo.content.includes(search));
+  }
   if (filter) {
     if (filter.status !== "3") {
       result = result.filter((todo) => todo.status === Number(filter.status));

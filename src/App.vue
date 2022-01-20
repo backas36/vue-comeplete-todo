@@ -52,7 +52,7 @@
         :selectedDateTime="selectedDateTime"
         @setSelectedDateTimeToTodo="getSelectedDateTime"
       ></date-time-selector>
-      <!--<div class="d-flex mt-3 col-12">
+      <div class="d-flex mt-3 col-12">
         <h5 class="col-3">Search task content</h5>
         <form class="col-8">
           <input
@@ -63,7 +63,7 @@
             v-model="searchContent"
           />
         </form>
-      </div>-->
+      </div>
 
       <div class="d-flex mt-3 col-12">
         <h5 class="col-3">task sort by</h5>
@@ -117,6 +117,7 @@ export default {
       sortOptions: ["time(default)", "content", "status"],
       selectedDateTime: null,
       selectedSort: 0,
+      searchContent: "",
     };
   },
   mounted() {
@@ -177,8 +178,11 @@ export default {
       this.editedTodoId = todoId;
     },
     listTodos() {
-      console.log(this.filter);
-      this.todos = listTodoItems(this.filter, this.selectedSort);
+      this.todos = listTodoItems(
+        this.searchContent,
+        this.filter,
+        this.selectedSort
+      );
       this.editedTodoId = null;
     },
     addTodo(todo) {
