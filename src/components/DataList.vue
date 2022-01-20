@@ -4,7 +4,7 @@
       <tr>
         <th scope="col">Task</th>
         <th scope="col">Status</th>
-        <th scope="col">Created_At</th>
+        <th scope="col">Updated_at</th>
         <th scope="col" class="text-center">#</th>
         <th scope="col" class="text-center">#</th>
       </tr>
@@ -81,7 +81,7 @@ export default {
   },
   watch: {
     dataSource: {
-      handler(newValue, oldValue) {
+      handler(newValue) {
         this.lists = newValue;
       },
       deep: true,
